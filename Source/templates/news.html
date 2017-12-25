@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block page_content %}
+<link rel = "stylesheet" href = "{{url_for('static', filename='style.css')}}">
+<body>
+<div class = "everything">
+	<!-- NAVIGATION BAR -->
+	<nav id="navMenu"></nav>
+	<script src="{{url_for('static', filename='interactive.js')}}"></script>
+	<div class = "infocontainer"> 
+		<div class="headline"> 
+			Algorithm Construction
+		</div>
+		<!-- construction zone image -->
+		<img src= "{{url_for('static', filename='images/construction.jpg')}}" class = "headlinepic">
+		<div class="info">
+			12/1/17 - ATS is closing on it's first project - a website that determines correlation between two given stocks. We are working on completing the graphing functions, as well as normalizing the shitty data that is given to us by Alpha Vantage. As the club goes on we will have to find a better data source. There are currently 7 official members, but others have showed interest in joining. As of this time next year I expect around 275 members and a yearly ROI of ~1200%.
+		</div>    
+	</div>
+</div>
+</body>
+{% endblock %}
