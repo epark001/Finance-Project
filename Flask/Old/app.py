@@ -23,35 +23,19 @@ choices   = [('', ''),('1day', '1 day'), ('1week', '1 week'), ('4week', '4 weeks
 class TickerForm(FlaskForm):
     #Validators check if the two tickers are in our list of tickers traded on nasdaq, amex, and nyse
     #Also require for every field to be filled out
-    ticker1   = StringField(u'Ticker 1:',    validators=[Required(), AnyOf(symbols(), message=u'Ticker 1 is not a valid symbol!')])
-    ticker2   = StringField(u'Ticker 2:',    validators=[Required(), AnyOf(symbols(), message=u'Ticker 2 is not a valid symbol!')])
-    length    = SelectField(u'Time Length:', validators=[Required()], choices=choices)
+    stock   = StringField(u'Stock:',    validators=[Required(), AnyOf(symbols(), message=u'Stock is not a valid symbol!')])
     submit    = SubmitField(u'Submit')
 
 #Home page  
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    ticker1  = None
-    ticker2  = None
-    length   = None
-    graph    = None
-    form     = TickerForm()
+    graph = None
+    stock = None
+    form = TickerForm()
     if form.validate_on_submit():
-        ticker1  = form.ticker1.data
-        ticker2  = form.ticker2.data
-        length   = form.length.data
-        #Makes graph from given
-        graph    = stockchart(ticker1, ticker2, length)
-        #These variables will be defined by the function anmol is writing  
-
-
-        tickerlate = ticker1
-        tickerearly = ticker2
-
-        x = get_data(ticker1, ticker2, length)
-        correlation = x[0]
-        offset = x[1]
-        return render_template('index.html', form=form, ticker1=ticker1, ticker2=ticker2, length=length, graph = graph, tickerlate=tickerlate, tickerearly=tickerearly, correlation=correlation, offset=offset)
+        stock  = form.stock.data
+        graph = candlestick(stock)
+        return render_template('index.html', form=form, stock=stock, graph = graph)
     return render_template('index.html', form=form, graph = graph)
 
 #Team page 
