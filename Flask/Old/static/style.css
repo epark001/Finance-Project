@@ -99,34 +99,12 @@ form {
 	width: 80%;
 }
 #graph1 {
-	float: left;
+	float: center;
 	position: relative;
 	padding: 20px 20px;
 	border-radius: 10px;
 	background-color: rgba(0, 0, 0, .35);
 }
-#graph2 {
-	float: right;
-	position: relative;
-	padding: 20px 20px;
-	border-radius: 10px;
-	background-color: rgba(0, 0, 0, .35);
-}
-
-#specificdata {
-	font-family: "Helvetica",Sans-Serif;
-	font-size: 1.5em;
-	text-decoration: none;
-	text-align: center;
-	color: #ffffff;
-	padding: 20px 20px;
-	border-radius: 10px;
-	background-color: rgba(0, 0, 0, .35);
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-}
-
 
 /********************************************************
 *******************COMMON PAGE UTILS*********************
