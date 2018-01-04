@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Can't Handle Exception</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
+</head>
+
+<body>
+	<div id="topStock" style="height:100vh;">
+    	<div class="chart" >
+    		<center>
+        		<p style="font-size:30px;">Candlestick Charts for {{ stock_name }}</p>
+    		</center>
+        	<canvas id="prediction_chart" margin: 10px></canvas>
+    	</div>
+	</div>
+    
+    <script>
+    	// get bar chart canvas
+		var prediction_chart = document.getElementById("prediction_chart").getContext("2d");
+		prediction_chart.canvas.width = 300;
+		prediction_chart.canvas.height = 100;
+
+		// bar chart data
+		actualGraphColor = "rgba(244, 98, 66, 1)";
+		svrRbfPredictGraphColor = "rgba(66, 134, 244, 0.7)";
+		krPredictGraphColor = "rgba(65, 234, 102, 0.7)";
+		avgPredictGraphColor = "rgba(160, 32, 240, 0.7)";
+
+		actualGraphColorLight = "rgba(244, 98, 66, 0.7)";
+		svrRbfPredictGraphColorLight = "rgba(66, 134, 244, 0.5)";
+		krPredictGraphColorLight = "rgba(65, 234, 102, 0.5)";
+		avgPredictGraphColorLight = "rgba(160, 32, 240, 0.5)";
+
+		textColor = "#000000";
+		gridColor = "#b3b3b3";
+
+
+		var originalLineDraw = Chart.controllers.line.prototype.draw;
+		Chart.helpers.extend(Chart.controllers.line.prototype, {
+		  draw: function() {
+		    originalLineDraw.apply(this, arguments);
+
+		    var chart = this.chart;
+		    var ctx = chart.chart.ctx;
+
+		    var index = chart.config.data.lineAtIndex;
+		    if (index) {
+		      var xaxis = chart.scales['x-axis-0'];
+		      var yaxis = chart.scales['y-axis-0'];
+
+		      ctx.save();
+		      ctx.beginPath();
+		      ctx.moveTo(xaxis.getPixelForValue(undefined, index), yaxis.top);
+		      ctx.strokeStyle = '#000000';
+		      ctx.lineTo(xaxis.getPixelForValue(undefined, index), yaxis.bottom);
+		      ctx.stroke();
+		      ctx.restore();
+		    }
+		  }
+		});
+
+		// draw bar chart
+		new Chart(prediction_chart, {
+		    type: 'line',
+		    data: {
+		        labels: [ {% for item in dates %}
+		            {{ item }} - {{ total }} + 1, {% endfor %}
+		        
+		        ],
+		        datasets: [{
+		        	label: "SVR RBF Model",
+		            borderColor: svrRbfPredictGraphColor,
+		            backgroundColor: svrRbfPredictGraphColorLight,
+		            borderWidth: 2,
+		            pointRadius: 1,
+		            fill: false,
+		            data: [{% for item in svr_rbf_predicted_values %} {
+			            	x: {{ item }} - {{ total }} + 1, 
+			            	y: {{ svr_rbf_predicted_values[item] }} 
+		            	},
+		                {% endfor %}
+		            ]
+		        }, {
+		        	label: "Kernel Ridge Regression Model",
+		        	borderColor: krPredictGraphColor,
+		        	backgroundColor: krPredictGraphColorLight,
+		            borderWidth: 2,
+		            pointRadius: 1,
+		            fill: false,
+		            data: [{% for item in kr_predicted_values %} {
+			            	x: {{ item }} - {{ total }} + 1, 
+			            	y: {{ kr_predicted_values[item] }} 
+		            	},
+		                {% endfor %}
+		            ]
+		        }, {
+		        	label: "Average Predict",
+		        	borderColor: avgPredictGraphColor,
+		        	backgroundColor: avgPredictGraphColorLight,
+		            borderWidth: 2,
+		            pointRadius: 1,
+		            fill: false,
+		            data: [{% for item in avg_predicted_values %} {
+			            	x: {{ item }} - {{ total }} + 1, 
+			            	y: {{ avg_predicted_values[item] }} 
+		            	},
+		                {% endfor %}
+		            ]
+		        }, {
+		        	label: "Actual Price",
+		            borderColor: actualGraphColor,
+		            backgroundColor: actualGraphColorLight,
+		            pointHoverRadius: 10,
+		            borderWidth: 3,
+		            pointRadius: 1,
+		            fill: false,
+		            data: [{% for item in actual_price %} {
+		            	x: {{ item }},
+		            	y: {{ actual_price[item] }}
+		            },
+		                {% endfor %}
+		            ]
+		        }],
+		        lineAtIndex: {{ total }} - 1
+
+		    },
+		    options: {
+		        legend: { 
+		        	display: true, 
+		        	labels: {
+		        		fontColor: textColor
+		        	}
+		        },
+		        maintainAspectRatio: false,
+		        scales: {
+		            yAxes: [{
+		                ticks: {
+		                    beginAtZero: false,
+		                    fontColor: textColor
+		                },
+		            scaleLabel: {
+					        display: true,
+					        labelString: 'Price',
+					        fontColor: textColor
+					    },
+					gridLines: {
+						  	display: true ,
+						  	color: gridColor
+						}    
+		            }],
+		            xAxes: [{
+		            	ticks: {
+		            		fontColor: textColor
+		            	}, 
+		                scaleLabel: {
+					        display: true,
+					        labelString: 'Days Since Today',
+					        fontColor: textColor
+					    },
+					    gridLines: {
+						  	display: true ,
+						  	color: gridColor
+						}
+		            }]
+		        }
+			},
+		});
+
+
+
+    </script>
+</body>
+
+</html>

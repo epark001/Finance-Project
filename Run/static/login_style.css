@@ -1,0 +1,43 @@
+form {
+    margin-top: 0;
+    margin-right: 5%;
+    margin-left: 5%;
+    width: 90%;
+    padding-bottom: 5%;
+}
+
+form div {
+    font-size: 32px;
+}
+
+#contants {
+    float: left;
+    width: 30%;
+    height: 50%;
+}
+
+#inputs {
+    float:left;
+    width: 100%;    
+}
+
+div .radio_type {
+    margin: 0;
+    text-align: center;
+    padding: 1%;
+    font-size: 30px;
+}
+
+form .radio_label {
+    margin: 0;
+    text-align: center;
+    margin-bottom: 0%;
+    padding: 1%;
+    font-size: 20px;
+    width: 15%;
+    display: inline-block;
+}
+
+form p {
+    text-align: center;
+}

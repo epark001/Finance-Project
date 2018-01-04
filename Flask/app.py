@@ -28,7 +28,7 @@ class TickerForm(FlaskForm):
     length    = SelectField(u'Time Length:', validators=[Required()], choices=choices)
     submit    = SubmitField(u'Submit')
 
-#Home page
+#Home page  
 @app.route('/', methods=['GET', 'POST'])
 def index():
     ticker1  = None
@@ -42,7 +42,7 @@ def index():
         length   = form.length.data
         #Makes graph from given
         graph    = stockchart(ticker1, ticker2, length)
-        #These variables will be defined by the function anmol is writing
+        #These variables will be defined by the function anmol is writing  
 
 
         tickerlate = ticker1
@@ -54,7 +54,7 @@ def index():
         return render_template('index.html', form=form, ticker1=ticker1, ticker2=ticker2, length=length, graph = graph, tickerlate=tickerlate, tickerearly=tickerearly, correlation=correlation, offset=offset)
     return render_template('index.html', form=form, graph = graph)
 
-#Team page
+#Team page 
 @app.route('/team', methods=['GET', 'POST'])
 def team():
     return render_template('team.html')
