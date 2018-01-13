@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Can't Handle Exception</title>
+    <title>Welcome</title>
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
@@ -12,7 +12,7 @@
 	<div id="topStock" style="height:100vh;">
     	<div class="chart" >
     		<center>
-        		<p style="font-size:30px;">Candlestick Charts for {{ stock_name }}</p>
+        		<p style="font-size:30px;">Prediction Models for {{ stock_name }}</p>
     		</center>
         	<canvas id="prediction_chart" margin: 10px></canvas>
     	</div>
@@ -21,8 +21,8 @@
     <script>
     	// get bar chart canvas
 		var prediction_chart = document.getElementById("prediction_chart").getContext("2d");
-		prediction_chart.canvas.width = 300;
-		prediction_chart.canvas.height = 100;
+		prediction_chart.canvas.width = 30;
+		prediction_chart.canvas.height = 10;
 
 		// bar chart data
 		actualGraphColor = "rgba(244, 98, 66, 1)";

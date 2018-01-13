@@ -18,24 +18,27 @@ manager   = Manager(app)
 bootstrap = Bootstrap(app)
 moment    = Moment(app)
 #choices for length in form
-choices   = [('', ''),('1day', '1 day'), ('1week', '1 week'), ('4week', '4 weeks'), ('3month', '3 months'), ('1year', '1 year'), ('5year', '5 years')]
+choices   = [('1day', '1 day'), ('1week', '5 Days'), ('4week', '10 Days'), ('3month', '5 months'), ('1year', '2 years'), ('4year', '4 years')]
 
 class TickerForm(FlaskForm):
     #Validators check if the two tickers are in our list of tickers traded on nasdaq, amex, and nyse
     #Also require for every field to be filled out
     stock   = StringField(u'Stock:',    validators=[Required(), AnyOf(symbols(), message=u'Stock is not a valid symbol!')])
+    length    = SelectField(u'Time Length:', validators=[Required()], choices=choices)
     submit    = SubmitField(u'Submit')
 
 #Home page  
 @app.route('/', methods=['GET', 'POST'])
 def index():
     graph = None
+    length = None
     stock = None
     form = TickerForm()
     if form.validate_on_submit():
         stock  = form.stock.data
-        graph = candlestick(stock)
-        return render_template('index.html', form=form, stock=stock, graph=graph)
+        length = form.length.data
+        graph = stockchart(stock, length)
+        return render_template('index.html', form=form, stock=stock, length=length, graph=graph)
     return render_template('index.html', form=form, graph=graph)
 
 #Team page 

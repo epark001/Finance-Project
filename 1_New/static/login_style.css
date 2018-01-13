@@ -3,6 +3,7 @@ form {
     margin-right: 5%;
     margin-left: 5%;
     width: 90%;
+    color: black;
     padding-bottom: 5%;
 }
 
@@ -12,12 +13,14 @@ form div {
 
 #contants {
     float: left;
+    color: black;
     width: 30%;
     height: 50%;
 }
 
 #inputs {
     float:left;
+    color:black;
     width: 100%;    
 }
 

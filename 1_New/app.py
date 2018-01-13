@@ -1,20 +1,31 @@
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, make_response
 app = Flask(__name__) 
 app.config.from_object(__name__) 
-import fetcher
+from alpha_vantage.timeseries import TimeSeries
+import pandas as pd
 import numpy as np
 from sklearn.svm import SVR
 from sklearn.model_selection import GridSearchCV
 from sklearn.kernel_ridge import KernelRidge
 from sklearn import linear_model
-import fetcher
 from datetime import datetime
 TOTAL = 30
+
+def get_data(symbol):
+	ts = TimeSeries(key="1WWS9XXK956Y1EIJ", output_format='pandas')
+	data, meta_data = ts.get_daily(symbol=symbol, outputsize="full")
+	dates = []
+	prices = []
+	for i in data['close']:
+		dates.append(i)
+	for i in data['close'].keys():
+		prices.append(i)
+	return pd.DataFrame(dates, prices, columns=["prices"])
 
 def predict(symbol, days):
 	global TOTAL
 	TOTAL = 30
-	close_data_df = fetcher.fetch_symbol(symbol)
+	close_data_df = get_data(symbol)
 
 	dates = list(close_data_df.axes[0])
 	date_indexes = list(range(len(dates)))
@@ -27,7 +38,7 @@ def predict(symbol, days):
 
 	date_indexes = np.reshape(date_indexes,(len(date_indexes), 1))
 
-	svr_rbf = SVR(kernel= 'rbf', C=1e3, gamma=0.1, epsilon=0.001) # defining the support vector regression models
+	svr_rbf = SVR(kernel= 'rbf', C=1e3, gamma=0.1, epsilon=0.001)
 	kr = GridSearchCV(KernelRidge(kernel='rbf', gamma=0.1),
                   param_grid={"alpha": [1e0, 1e-1, 1e-2, 1e-3],
                               "gamma": np.logspace(-2, 2, 5)})
@@ -78,7 +89,6 @@ def home_post():
 	else:
 		return make_response(redirect(url_for('home')))
 
-# Route is /predict?stock="TCKR"
 @app.route('/predict', methods=['GET'])
 def main():
 	stock = request.args.get('stock')
